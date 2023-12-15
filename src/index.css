@@ -6,6 +6,7 @@
 body{
   background-color: #f6f7fb;
   color: #1F305E;
+  font-size: 1.2rem;
 }
 
 .App{
@@ -33,7 +34,7 @@ body{
 }
 
 .correctAnswers{
-  background-color: #90EE90;
+  background-color: #ACE1AF;
   border-radius: 5px;
   border-color: black;
   font-weight: bold;
@@ -42,7 +43,7 @@ body{
 }
 
 .wrongAnswer{
-  background-color: #FE6F5E;
+  background-color: #FDBCB4;
   border-color: black;
   border-radius: 5px;
   font-weight: bold;
@@ -51,7 +52,7 @@ body{
 }
 
 .pickedAnswer {
-  background-color: #89CFF0;
+  background-color: #B9D9EB;
   border-color: black;
   border-radius: 5px;
   font-weight: bold;
@@ -92,6 +93,7 @@ select{
   background: none;
   color: black;
 }
+
 .questionAmount{
  display: flex;
  flex-direction: column;
@@ -99,6 +101,7 @@ select{
  align-items: center;
  gap: 10px;
 }
+
 .questionAmount, input{
   width: 100%;
   max-width: 300px;
@@ -113,15 +116,6 @@ select{
 h1{
   margin-bottom: 20px;
 
-}
-.warningNote{
-  background-color: whitesmoke;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 1px 1px 10px 1px #FF0800;
-  font-size: 1rem;
-  margin: 0 30px 50px;
-  border: solid 2px black;
 }
 
 img{

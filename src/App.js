@@ -1,6 +1,7 @@
 import React from 'react';
 import Questions from './Components/Questions';
 import {decode} from 'html-entities';
+import uniqid from 'uniqid';
 
 function App() {
   const [quiz, setQuiz] = React.useState([])
@@ -8,61 +9,71 @@ function App() {
   const [submitQuiz, setSubmitQuiz] = React.useState(false)
   const [pickedAnswers, setPickedAnswers] = React.useState(new Array(5).fill(null))
 
-  const [numberOfQuestions, setNumberOfQuestions] = React.useState(null)
-  const [questionType, setQuestionType] = React.useState(null)
-  const [difficulty, setDifficulty] = React.useState(null)
-  const [category, setCategory] = React.useState(null)
+  const [numberOfQuestions, setNumberOfQuestions] = React.useState(5)
+  const [difficulty, setDifficulty] = React.useState("any")
+  const [category, setCategory] = React.useState("any")
  
-  function displayQuiz(){
-    if(startQuiz){
+
+  
+  function displayQuiz() {
+    if (startQuiz) {
       return quiz.map((data, index) => {
         return (
-          <div className='quizContainer'>
-             <p className='questionNumber'>{index + 1}.</p>
-              <p 
-                key={data.question}
-                className="question"
-                >{decode(data.question)}
-              </p>
-              {data.shuffledAnswers.map(choiceOptions =>
-              <button 
+          <div className='quizContainer' key={uniqid()}>
+            <p className='questionNumber'>{index + 1}.</p>
+            <p key={uniqid()} className="question">
+              {cleanString(decode(data.question))}
+            </p>
+            {data.shuffledAnswers.map(choiceOptions => (
+              <button
+                key={uniqid()}
                 id={choiceOptions}
                 onClick={() => pickedAnswer(index, choiceOptions)}
                 className={pickedAnswers[index] === choiceOptions ? "pickedAnswer" : ""}
-                >  
-                {decode(choiceOptions)}
+              >
+                {cleanString(decode(choiceOptions))}
               </button>
-              )}
+            ))}
           </div>
-        )
-      })
-    }    
+        );
+      });
+    }
   }
-
-  function displayCorrectAnswers(){
-    if(startQuiz){
+  
+  function displayCorrectAnswers() {
+    if (startQuiz) {
       return quiz.map((data, index) => {
         return (
-          <div className='quizContainer'>
+          <div className='quizContainer' key={uniqid()}>
             <p className='questionNumber'>{index + 1}.</p>
-              <div 
-              key={data.question}
-              className="question"
-              >{data.question}
-              </div>
-              {data.shuffledAnswers.map(choiceOptions => 
-              <button 
-                id={choiceOptions} 
-                className={ pickedAnswers[index] === choiceOptions && data.correct_answer === choiceOptions ? "correctAnswers" :
-                data.correct_answer === choiceOptions  ? "correctAnswers" : pickedAnswers[index] === choiceOptions ? 'wrongAnswer' : ''}
-                >  
-                {decode(choiceOptions)}
+            <div key={uniqid()} className="question">
+              {cleanString(data.question)}
+            </div>
+            {data.shuffledAnswers.map(choiceOptions => (
+              <button
+                key={uniqid()}
+                id={choiceOptions}
+                className={
+                  pickedAnswers[index] === choiceOptions && data.correct_answer === choiceOptions
+                    ? "correctAnswers"
+                    : data.correct_answer === choiceOptions
+                    ? "correctAnswers"
+                    : pickedAnswers[index] === choiceOptions
+                    ? "wrongAnswer"
+                    : ""
+                }
+              >
+                {cleanString(decode(choiceOptions))}
               </button>
-              )}
+            ))}
           </div>
-        )
-      })
-    }    
+        );
+      });
+    }
+  }
+
+  function cleanString(inputString) {
+    return inputString.replace(/&quot;/g, '"').replace(/&#039;/g, "'").replace(/<\/?[^>]+(>|$)/g, '');
   }
 
 
@@ -89,7 +100,6 @@ function finalScore(){
     </div>
   )
 }
-
      
 function startQuizApp(){
   setStartQuiz(start => !start)
@@ -139,7 +149,6 @@ const handleSubmit = (e) => {
     startQuizApp();
 
     setNumberOfQuestions(document.getElementById("numberOfQuestions").value)
-    setQuestionType(document.getElementById('questionType').value)
     setDifficulty(document.getElementById('difficulty').value)
     setCategory(document.getElementById('category').value)
    
@@ -151,13 +160,6 @@ const handleSubmit = (e) => {
 
       <div id='optionsContainer'>
         <h1>Quiz App</h1>
-        <p className='warningNote'>
-          <h4>⚠️WARNING⚠️</h4>
-          Please be aware that if you don't receive any questions after 
-          starting the quiz. <br></br>
-          There is an issue with the current API 
-          with it not supporting certain quiz types.
-        </p>
         <div className='quizOptions'>
           <div className='questionAmount'>
             <p>Enter in Question Amount</p>
@@ -165,23 +167,17 @@ const handleSubmit = (e) => {
           </div>
 
         <form onSubmit={handleSubmit}>
-          <select id="questionType" name="questionType" required>
-            <option value="" selected disabled>Select Question Type</option>
-            <option value="any">Any</option>
-            <option value="multiple">Multiple Choice</option>
-            <option value="boolean">True/False</option>
-          </select>
 
-          <select id="difficulty" name="difficulty" required>
-            <option value="" selected disabled>Select Difficulty</option>
+          <select id="difficulty" defaultValue="" name="difficulty" required>
+            <option value="" disabled>Select Difficulty</option>
             <option value="any">Any Difficulty</option>
             <option value="easy">Easy</option>
             <option value="medium">Medium</option>
             <option value="hard">Hard</option>
           </select>
 
-          <select id="category" name="category" required>
-            <option value="" selected disabled>Select Category</option>
+          <select id="category" defaultValue="" name="category" required>
+            <option value=""  disabled>Select Category</option>
             <option value="any">Any Category</option>
             <option value="9">General Knowledge</option>
             <option value="10">Entertainment: Books</option>
@@ -219,15 +215,15 @@ const handleSubmit = (e) => {
         </div>
       </div>
 
-      <Questions 
-      startQuiz={startQuiz}
-      numberOfQuestions={numberOfQuestions}
-      questionType={questionType}
-      difficulty={difficulty}
-      category={category}
-      startQuizFunction={startQuizApp}
-      setQuiz={setQuiz}
-      />
+       <Questions 
+        startQuiz={startQuiz}
+        numberOfQuestions={numberOfQuestions}
+        difficulty={difficulty}
+        category={category}
+        startQuizFunction={startQuizApp}
+        setQuiz={setQuiz}
+      /> 
+      
       
       {!submitQuiz ? displayQuiz() : 'hideBtn' && displayCorrectAnswers()}
       {!submitQuiz ? displaySubmitBtn() : displayPlayAgainBtn()}
@@ -238,6 +234,7 @@ const handleSubmit = (e) => {
 }
 
 export default App;
+
 
 
 
